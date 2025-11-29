@@ -11,11 +11,11 @@ export const UserItem = ({ usuario, onEdit, onDelete }: UserItemProps) => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     const handleDelete = () => {
-        if (usuario.id) {
-            onDelete(usuario.id);
-        }
-        setShowDeleteConfirm(false);
-    };
+    if (usuario.id) {
+        onDelete(usuario.id); // 1. Usar la prop correcta 'onDelete'
+        setShowDeleteConfirm(false); // 2. Cerrar el modal
+    }
+};
 
     return (
         <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
