@@ -2,39 +2,47 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from '
 import type { Producto } from '../data/productos';
 import type { Usuario } from '../data/Usuario';
 import { ProductService } from '../service/product.service'; 
+import { UserService } from '../service/user.service'; // <--- Importamos el nuevo servicio
 
 interface AdminContextType {
+    // --- Productos ---
     productos: Producto[];
     agregarProducto: (producto: Omit<Producto, 'id'>) => void;
     actualizarProducto: (id: number, producto: Partial<Producto>) => void;
     eliminarProducto: (id: number) => void;
+    
+    // --- Usuarios (Actualizado a backend real) ---
     usuarios: Usuario[];
-    actualizarUsuario: (email: string, usuario: Partial<Usuario>) => void;
-    eliminarUsuario: (email: string) => void;
+    actualizarUsuario: (id: number, usuario: Partial<Usuario>) => void; // Cambiamos email por id
+    eliminarUsuario: (id: number) => void; // Cambiamos email por id
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
-    // ----------------------------------------------------
-    // 1. ESTADO DE PRODUCTOS (Desde Backend)
-    // ----------------------------------------------------
     const [productos, setProductos] = useState<Producto[]>([]);
+    const [usuarios, setUsuarios] = useState<Usuario[]>([]);
 
-    // Cargar productos al iniciar el componente
+    // Cargar Datos Iniciales (Productos y Usuarios)
     useEffect(() => {
-        cargarProductos();
+        cargarDatos();
     }, []);
 
-    const cargarProductos = async () => {
+    const cargarDatos = async () => {
         try {
-            const data = await ProductService.listar();
-            setProductos(data);
+            // Cargar Productos
+            const dataProductos = await ProductService.listar();
+            setProductos(dataProductos);
+            
+            // Cargar Usuarios Real desde Backend
+            const dataUsuarios = await UserService.listar();
+            setUsuarios(dataUsuarios);
         } catch (error) {
-            console.error("Error cargando productos del backend:", error);
+            console.error("Error cargando datos del backend:", error);
         }
     };
 
+    // --- Lógica de Productos ---
     const agregarProducto = async (nuevoProducto: Omit<Producto, 'id'>) => {
         try {
             const productoCreado = await ProductService.crear(nuevoProducto);
@@ -51,48 +59,43 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
             setProductos(prev => prev.map(p => (p.id === id ? productoFinal : p)));
         } catch (error) {
             console.error("Error al actualizar producto:", error);
-            alert("Error al actualizar producto");
         }
     };
 
     const eliminarProducto = async (id: number) => {
-        if (!confirm("¿Estás seguro de eliminar este producto?")) return;
+        if (!confirm("¿Eliminar este producto?")) return;
         try {
             await ProductService.eliminar(id);
             setProductos(prev => prev.filter(p => p.id !== id));
         } catch (error) {
             console.error("Error al eliminar producto:", error);
-            alert("Error al eliminar producto");
         }
     };
 
-    // ----------------------------------------------------
-    // 2. ESTADO DE USUARIOS (Legacy: LocalStorage)
-    // *Mantener esto hasta crear el UserService*
-    // ----------------------------------------------------
-    const [usuarios, setUsuarios] = useState<Usuario[]>(() => {
-        const savedUsuarios = localStorage.getItem('usuariosRegistrados');
-        return savedUsuarios ? JSON.parse(savedUsuarios) : [];
-    });
-
-    useEffect(() => {
-        localStorage.setItem('usuariosRegistrados', JSON.stringify(usuarios));
-    }, [usuarios]);
-
-    const actualizarUsuario = (email: string, usuarioActualizado: Partial<Usuario>) => {
-        setUsuarios(prev => prev.map(u => 
-            u.email === email ? { ...u, ...usuarioActualizado } : u
-        ));
+    // --- Lógica de Usuarios (NUEVA - INTEGRADA CON BACKEND) ---
+    const actualizarUsuario = async (id: number, usuarioActualizado: Partial<Usuario>) => {
+        try {
+            const usuarioFinal = await UserService.actualizar(id, usuarioActualizado);
+            setUsuarios(prev => prev.map(u => (u.id === id ? usuarioFinal : u)));
+            alert("Usuario actualizado correctamente");
+        } catch (error) {
+            console.error("Error actualizando usuario:", error);
+            alert("No se pudo actualizar el usuario");
+        }
     };
 
-    const eliminarUsuario = (email: string) => {
-        if (!confirm("¿Estás seguro de eliminar este usuario?")) return;
-        setUsuarios(prev => prev.filter(u => u.email !== email));
+    const eliminarUsuario = async (id: number) => {
+        if (!confirm("¿Estás seguro de eliminar este usuario de la base de datos?")) return;
+        try {
+            await UserService.eliminar(id);
+            setUsuarios(prev => prev.filter(u => u.id !== id)); // Usamos ID, no email
+            alert("Usuario eliminado");
+        } catch (error) {
+            console.error("Error eliminando usuario:", error);
+            alert("Error al eliminar usuario (¿Quizás tiene boletas asociadas?)");
+        }
     };
 
-    // ----------------------------------------------------
-    // 3. RETORNO DEL PROVIDER
-    // ----------------------------------------------------
     return (
         <AdminContext.Provider
             value={{
@@ -113,7 +116,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
 export const useAdmin = () => {
     const context = useContext(AdminContext);
     if (!context) {
-        throw new Error('useAdmin solamente debe ser usado con AdminProvider');
+        throw new Error('useAdmin error');
     }
     return context;
 };

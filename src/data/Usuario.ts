@@ -1,4 +1,5 @@
 export interface Usuario {
+  id?: number; // ID del usuario en la base de datos
   nombre: string;
   email: string;
   telefono: string;

@@ -34,9 +34,9 @@ export const UserList = () => {
     };
 
     const handleSubmit = (usuario: Usuario) => {
-        if (editingUser) {
+        if (editingUser && usuario.id) {
             // Actualizar usuario existente
-            actualizarUsuario(usuario.email, usuario);
+            actualizarUsuario(usuario.id, usuario);
         } else {
             // No permitir agregar usuarios desde el admin (solo editar)
             // Los usuarios deben registrarse desde el formulario de registro
@@ -118,7 +118,7 @@ export const UserList = () => {
                 {usuariosFiltrados.length > 0 ? (
                     usuariosFiltrados.map(usuario => (
                         <UserItem
-                            key={usuario.email}
+                            key={usuario.id || usuario.email}
                             usuario={usuario}
                             onEdit={handleEditUser}
                             onDelete={eliminarUsuario}
