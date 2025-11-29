@@ -14,10 +14,10 @@ export const NosotrosPage = () => {
                 title="Nuestra Pasteleria" 
                 imageUrl="https://peruretail.sfo3.cdn.digitaloceanspaces.com/wp-content/uploads/Postres.png" 
             />
-            <AboutContent 
-                paragraphs={paragraphs} 
-                sectionTitle="Pasteles hechos con amor" 
-            />
+            <AboutContent paragraphs={paragraphs} />
+            <h2 className="text-3xl font-semibold tracking-tight mt-8 mb-4">
+                Pasteles hechos con amor
+            </h2>
             <ContactInfo 
                 email="pasteleria@pasteleriamilsabores.com" 
                 phone="+56 9 91537604" 

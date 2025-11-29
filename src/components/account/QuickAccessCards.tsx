@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { HiShoppingBag, HiHeart, HiUser, HiCog } from "react-icons/hi";
+import { HiShoppingBag } from "react-icons/hi";
 
 export const QuickAccessCards = () => {
     const cards = [
@@ -11,33 +11,6 @@ export const QuickAccessCards = () => {
             title: "Mis Pedidos",
             description: "Ver historial de compras",
             link: "/cart"
-        },
-        {
-            id: 2,
-            icon: HiHeart,
-            iconColor: "text-pink-600",
-            bgColor: "bg-pink-100",
-            title: "Favoritos",
-            description: "Pasteles guardados",
-            link: null
-        },
-        {
-            id: 3,
-            icon: HiUser,
-            iconColor: "text-blue-600",
-            bgColor: "bg-blue-100",
-            title: "Perfil",
-            description: "Editar informacion personal",
-            link: null
-        },
-        {
-            id: 4,
-            icon: HiCog,
-            iconColor: "text-gray-600",
-            bgColor: "bg-gray-100",
-            title: "Configuracion",
-            description: "Ajustes de la cuenta",
-            link: null
         }
     ];
 
@@ -59,7 +32,7 @@ export const QuickAccessCards = () => {
                         </div>
                     );
 
-                    return card.link ? (
+                    return (
                         <Link 
                             key={card.id}
                             to={card.link}
@@ -67,13 +40,6 @@ export const QuickAccessCards = () => {
                         >
                             {content}
                         </Link>
-                    ) : (
-                        <div 
-                            key={card.id}
-                            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
-                        >
-                            {content}
-                        </div>
                     );
                 })}
             </div>

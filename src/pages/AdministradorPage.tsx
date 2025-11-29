@@ -1,11 +1,19 @@
 import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import { AdminProvider } from '../context/AdminContext';
 import { DashboardNav } from '../components/admin/DashboardNav';
 import { ProductList } from '../components/admin/productos/ProductList';
 import { UserList } from '../components/admin/usuarios/UserList';
+import { useUser } from '../context/UserContext';
 
 export const AdministradorPage = () => {
+    const { user, isAuthenticated } = useUser();
     const [activeTab, setActiveTab] = useState<'productos' | 'usuarios'>('productos');
+
+    // 🔒 PROTECCIÓN: Solo usuarios con isAdmin pueden acceder
+    if (!isAuthenticated || !user?.isAdmin) {
+        return <Navigate to="/login" replace />;
+    }
 
     return (
         <AdminProvider>

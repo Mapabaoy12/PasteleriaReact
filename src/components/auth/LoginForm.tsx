@@ -30,6 +30,38 @@ export const LoginForm = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         
+        // 🔒 VALIDAR CREDENCIALES DE ADMINISTRADOR
+        const ADMIN_EMAIL = 'administrador@admin.com';
+        const ADMIN_PASSWORD = 'easter egg';
+
+        if (formData.email === ADMIN_EMAIL) {
+            if (formData.password === ADMIN_PASSWORD) {
+                // Crear usuario administrador
+                const adminUser = {
+                    nombre: 'Administrador',
+                    email: ADMIN_EMAIL,
+                    telefono: '',
+                    fechaNacimiento: '1990-01-01',
+                    direccion: '',
+                    esDuocUC: false,
+                    esMayorDe50: false,
+                    tieneDescuentoFelices50: false,
+                    descuentoPorcentaje: 0,
+                    tortaGratisCumpleanosDisponible: false,
+                    tortaGratisCumpleanosUsada: false,
+                    isAdmin: true
+                };
+                
+                login(adminUser);
+                alert("Bienvenido Administrador 🔑");
+                navigate("/admin");
+                return;
+            } else {
+                alert("Contraseña de administrador incorrecta");
+                return;
+            }
+        }
+        
         // Buscar usuario en la lista de usuarios registrados
         const usuariosRegistrados = localStorage.getItem('usuariosRegistrados');
         
@@ -95,12 +127,15 @@ export const LoginForm = () => {
                 </button>
             </form>
 
-            <div className="mt-6 text-center">
+            <div className="mt-6 text-center space-y-2">
                 <p className="text-gray-600">
                     ¿No tienes cuenta?{" "}
                     <Link to="/registro" className="text-rose-600 hover:text-rose-700 font-medium">
                         Registrate aquí
                     </Link>
+                </p>
+                <p className="text-xs text-gray-500">
+                    ¿Eres administrador? 🔑 Usa las credenciales especiales
                 </p>
             </div>
         </div>

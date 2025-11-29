@@ -12,6 +12,7 @@ export interface Usuario {
   tortaGratisCumpleanosDisponible: boolean; // Si puede usar torta gratis
   tortaGratisCumpleanosUsada: boolean; // Si ya uso la torta gratis
   añoTortaGratisCumpleanos?: number; // Anio en que uso la torta gratis
+  isAdmin?: boolean; // Si es administrador del sistema
 }
 
 // Funcion helper para calcular edad

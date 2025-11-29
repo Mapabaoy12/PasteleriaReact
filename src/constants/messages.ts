@@ -27,8 +27,3 @@ export const VALIDATION_MESSAGES = {
   ENTER_CODE: "Por favor ingresa un codigo",
   INVALID_CODE: "Codigo invalido",
 } as const;
-
-// MENSAJES GENERALES 
-export const GENERAL_MESSAGES = {
-  TRY_AGAIN: "Por favor intenta de nuevo",
-} as const;
