@@ -4,8 +4,9 @@ import { HiMail, HiLockClosed } from "react-icons/hi";
 import { InputField } from "./InputField";
 import { RememberMeCheckbox } from "./RememberMeCheckbox";
 import { ForgotPasswordLink } from "./ForgotPasswordLink";
-import { useUser } from "../../context/UserContext";
 import { AUTH_MESSAGES } from "../../constants/messages";
+import { AuthService } from "../../service/auth.service";
+import { useUser } from '../../context/UserContext';
 
 interface LoginFormData {
     email: string;
@@ -27,16 +28,27 @@ export const LoginForm = () => {
         });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async(e: React.FormEvent) => {
         e.preventDefault();
+        try {
+        // 1. Llamar al backend
+        const token = await AuthService.login(formData.email, formData.password);
         
-        // 🔒 VALIDAR CREDENCIALES DE ADMINISTRADOR
+        localStorage.setItem('token', token);
+        
+        
+        alert("Sesión iniciada exitosamente");
+        navigate("/account");
+        
+    } catch (error) {
+        alert("Error al iniciar sesión: Credenciales inválidas");
+    }
+        
         const ADMIN_EMAIL = 'administrador@admin.com';
         const ADMIN_PASSWORD = 'easter egg';
 
         if (formData.email === ADMIN_EMAIL) {
             if (formData.password === ADMIN_PASSWORD) {
-                // Crear usuario administrador
                 const adminUser = {
                     nombre: 'Administrador',
                     email: ADMIN_EMAIL,
