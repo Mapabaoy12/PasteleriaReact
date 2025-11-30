@@ -1,6 +1,6 @@
 export interface Producto {
     id: number;
-    titulo: string;
+    nombre: string;
     imagen: string;
     forma: string; // "Circulares" o "Cuadrada"
     tamanio: string; // "Grande" o "Pequenia"
@@ -14,7 +14,7 @@ export interface Producto {
 export const productos: Producto[] = [
     {
         id: 1,
-        titulo: "Torta Chocolate Especial",
+        nombre: "Torta Chocolate Especial",
         imagen: "./img/circulares/tortacircular1.webp",
         forma: "Circulares",
         tamanio: "Grande",
@@ -24,7 +24,7 @@ export const productos: Producto[] = [
     },
     {
         id: 2,
-        titulo: "Torta Celebración",
+        nombre: "Torta Celebración",
         imagen: "/img/circulares/tortacircular2.gif",
         forma: "Circulares",
         tamanio: "Grande",
@@ -34,7 +34,7 @@ export const productos: Producto[] = [
     },
     {
         id: 3,
-        titulo: "Torta Vainilla Premium",
+        nombre: "Torta Vainilla Premium",
         imagen: "/img/circulares/tortacircular3.jpg",
         forma: "Circulares",
         tamanio: "Grande",
@@ -44,7 +44,7 @@ export const productos: Producto[] = [
     },
     {
         id: 4,
-        titulo: "Torta Red Velvet",
+        nombre: "Torta Red Velvet",
         imagen: "/img/circulares/tortacircular4.webp",
         forma: "Circulares",
         tamanio: "Grande",
@@ -54,7 +54,7 @@ export const productos: Producto[] = [
     },
     {
         id: 5,
-        titulo: "Torta Frutas Tropicales",
+        nombre: "Torta Frutas Tropicales",
         imagen: "/img/circulares/tortacircular5.jpg",
         forma: "Circulares",
         tamanio: "Grande",
@@ -64,7 +64,7 @@ export const productos: Producto[] = [
     },
     {
         id: 6,
-        titulo: "Mini Torta Chocolate",
+        nombre: "Mini Torta Chocolate",
         imagen: "/img/circulares/tortacircularpeque1.jpeg",
         forma: "Circulares",
         tamanio: "Pequenia",
@@ -74,7 +74,7 @@ export const productos: Producto[] = [
     },
     {
         id: 7,
-        titulo: "Mini Torta Vainilla",
+        nombre: "Mini Torta Vainilla",
         imagen: "/img/circulares/tortacircularpeque3.webp",
         forma: "Circulares",
         tamanio: "Pequenia",
@@ -84,7 +84,7 @@ export const productos: Producto[] = [
     },
     {
         id: 8,
-        titulo: "Mini Torta Fresa",
+        nombre: "Mini Torta Fresa",
         imagen: "/img/circulares/tortacircularpeque5.webp",
         forma: "Circulares",
         tamanio: "Pequenia",
@@ -94,7 +94,7 @@ export const productos: Producto[] = [
     },
     {
         id: 9,
-        titulo: "Torta Cuadrada Chocolate",
+        nombre: "Torta Cuadrada Chocolate",
         imagen: "/img/cuadradas/tortacuadrada1.jpg",
         forma: "Cuadrada",
         tamanio: "Grande",
@@ -104,7 +104,7 @@ export const productos: Producto[] = [
     },
     {
         id: 10,
-        titulo: "Torta Cuadrada Caramelo",
+        nombre: "Torta Cuadrada Caramelo",
         imagen: "/img/cuadradas/tortacuadrada2.jpg",
         forma: "Cuadrada",
         tamanio: "Grande",
@@ -114,7 +114,7 @@ export const productos: Producto[] = [
     },
     {
         id: 11,
-        titulo: "Torta Cuadrada Limón",
+        nombre: "Torta Cuadrada Limón",
         imagen: "/img/cuadradas/tortacuadrada3.jpg",
         forma: "Cuadrada",
         tamanio: "Grande",
@@ -124,7 +124,7 @@ export const productos: Producto[] = [
     },
     {
         id: 12,
-        titulo: "Torta Especial Navideña",
+        nombre: "Torta Especial Navideña",
         imagen: "/img/cuadradas/tortacuadrada4.jpg",
         forma: "Cuadrada",
         tamanio: "Grande",
@@ -134,7 +134,7 @@ export const productos: Producto[] = [
     },
     {
         id: 13,
-        titulo: "Torta Cumpleaños Infantil",
+        nombre: "Torta Cumpleaños Infantil",
         imagen: "/img/cuadradas/tortacuadrada5.jpg",
         forma: "Cuadrada",
         tamanio: "Grande",
@@ -144,7 +144,7 @@ export const productos: Producto[] = [
     },
     {
         id: 14,
-        titulo: "Mini Torta Cuadrada Chocolate",
+        nombre: "Mini Torta Cuadrada Chocolate",
         imagen: "/img/cuadradas/tortacuadradapeque1.jpg",
         forma: "Cuadrada",
         tamanio: "Pequenia",
@@ -154,7 +154,7 @@ export const productos: Producto[] = [
     },
     {
         id: 15,
-        titulo: "Mini Torta Cuadrada Vainilla",
+        nombre: "Mini Torta Cuadrada Vainilla",
         imagen: "/img/cuadradas/tortacuadradapeque2.jpg",
         forma: "Cuadrada",
         tamanio: "Pequenia",
@@ -164,7 +164,7 @@ export const productos: Producto[] = [
     },
     {
         id: 16,
-        titulo: "Mini Torta Cuadrada Fresa",
+        nombre: "Mini Torta Cuadrada Fresa",
         imagen: "/img/cuadradas/tortacuadradapeque3.webp",
         forma: "Cuadrada",
         tamanio: "Pequenia",
@@ -174,7 +174,7 @@ export const productos: Producto[] = [
     },
     {
         id: 17,
-        titulo: "Mini Torta Cuadrada Caramelo",
+        nombre: "Mini Torta Cuadrada Caramelo",
         imagen: "/img/cuadradas/tortacuadradapeque4.jpg",
         forma: "Cuadrada",
         tamanio: "Pequenia",
@@ -184,7 +184,7 @@ export const productos: Producto[] = [
     },
     {
         id: 18,
-        titulo: "Mini Torta Cuadrada Especial",
+        nombre: "Mini Torta Cuadrada Especial",
         imagen: "/img/cuadradas/tortacuadradapeque5.jpg",
         forma: "Cuadrada",
         tamanio: "Pequenia",
@@ -194,7 +194,7 @@ export const productos: Producto[] = [
     },
     {
         id: 19,
-        titulo: "Mini Torta Cuadrada Premium",
+        nombre: "Mini Torta Cuadrada Premium",
         imagen: "/img/cuadradas/tortacuadradapeque6.png",
         forma: "Cuadrada",
         tamanio: "Pequenia",
@@ -209,7 +209,7 @@ export const pastelesRecientes = [
 
     {
         id: 16,
-        titulo: "Mini Torta Cuadrada Fresa",
+        nombre: "Mini Torta Cuadrada Fresa",
         imagen: "/img/cuadradas/tortacuadradapeque3.webp",
         forma: "Cuadrada",
         tamanio: "Pequenia",
@@ -219,7 +219,7 @@ export const pastelesRecientes = [
     },
     {
         id: 17,
-        titulo: "Mini Torta Cuadrada Caramelo",
+        nombre: "Mini Torta Cuadrada Caramelo",
         imagen: "/img/cuadradas/tortacuadradapeque4.jpg",
         forma: "Cuadrada",
         tamanio: "Pequenia",
@@ -229,7 +229,7 @@ export const pastelesRecientes = [
     },
     {
         id: 18,
-        titulo: "Mini Torta Cuadrada Especial",
+        nombre: "Mini Torta Cuadrada Especial",
         imagen: "/img/cuadradas/tortacuadradapeque5.jpg",
         forma: "Cuadrada",
         tamanio: "Pequenia",
@@ -239,7 +239,7 @@ export const pastelesRecientes = [
     },
     {
         id: 19,
-        titulo: "Mini Torta Cuadrada Premium",
+        nombre: "Mini Torta Cuadrada Premium",
         imagen: "/img/cuadradas/tortacuadradapeque6.png",
         forma: "Cuadrada",
         tamanio: "Pequenia",
@@ -254,7 +254,7 @@ export const productosDestacados = [
 
     {
         id: 1,
-        titulo: "Torta Chocolate Especial",
+        nombre: "Torta Chocolate Especial",
         imagen: "./img/circulares/tortacircular1.webp",
         forma: "Circulares",
         tamanio: "Grande",
@@ -264,7 +264,7 @@ export const productosDestacados = [
     },
     {
         id: 2,
-        titulo: "Torta Celebración",
+        nombre: "Torta Celebración",
         imagen: "/img/circulares/tortacircular2.gif",
         forma: "Circulares",
         tamanio: "Grande",
@@ -274,7 +274,7 @@ export const productosDestacados = [
     },
     {
         id: 3,
-        titulo: "Torta Vainilla Premium",
+        nombre: "Torta Vainilla Premium",
         imagen: "/img/circulares/tortacircular3.jpg",
         forma: "Circulares",
         tamanio: "Grande",
@@ -284,7 +284,7 @@ export const productosDestacados = [
     },
     {
         id: 4,
-        titulo: "Torta Red Velvet",
+        nombre: "Torta Red Velvet",
         imagen: "/img/circulares/tortacircular4.webp",
         forma: "Circulares",
         tamanio: "Grande",

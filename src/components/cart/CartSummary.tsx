@@ -8,6 +8,7 @@ import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FEATURE_MESSAGES } from "../../constants/messages";
+import api from "../../service/api"; // Importamos la instancia de Axios configurada
 
 interface CartSummaryProps {
     cart: CartState;
@@ -17,7 +18,7 @@ interface CartSummaryProps {
 
 export const CartSummary = ({ cart, onApplyPromoCode, onRemovePromoCode }: CartSummaryProps) => {
     const { user, isAuthenticated } = useUser();
-    const { agregarPedido } = usePedidos();
+    const { agregarPedido } = usePedidos(); // Mantenemos esto para actualizar el estado local si es necesario, aunque lo ideal es recargar desde backend
     const { clearCart } = useCart();
     const navigate = useNavigate();
     const [isProcessing, setIsProcessing] = useState(false);
@@ -32,25 +33,58 @@ export const CartSummary = ({ cart, onApplyPromoCode, onRemovePromoCode }: CartS
     // Total con descuentos de usuario y codigo promocional
     const totalConDescuentos = cart.total - userDiscount;
 
-    const handleProcederPago = () => {
-        // Verificar que el usuario esté logueado
-        if (!isAuthenticated || !user) {
-            alert("Debes iniciar sesion para realizar una compra");
+    const handleProcederPago = async () => {
+        // 1. Verificar autenticación
+        if (!isAuthenticated || !user?.id) { // Verificamos user.id para asegurar que tenemos el ID del backend
+            alert("Debes iniciar sesión para realizar una compra");
             navigate("/login");
             return;
         }
 
-        // Verificar que haya items en el carrito
+        // 2. Verificar carrito vacío
         if (cart.items.length === 0) {
-            alert("Tu carrito esta vacio");
+            alert("Tu carrito está vacío");
             return;
         }
 
         setIsProcessing(true);
 
-        // Simular procesamiento de pago
-        setTimeout(() => {
-            // Crear el pedido
+        try {
+            // --- PASO A: Crear el carrito en el Backend ---
+            // Llama a: POST /api/v1/carrito/crear/{usuarioId}
+            // Esto devuelve un objeto CarritoDTO con su nuevo ID
+            const crearCarritoResponse = await api.post(`/api/v1/carrito/crear/${user.id}`);
+            const carritoId = crearCarritoResponse.data.id;
+            
+            console.log(`Carrito creado en backend con ID: ${carritoId}`);
+
+            // --- PASO B: Enviar los items del frontend al backend ---
+            // El backend requiere agregar los items uno por uno (o podrías crear un endpoint batch)
+            // Usamos Promise.all para enviarlos en paralelo y que sea rápido
+            const promesasDeItems = cart.items.map(item => {
+                // Body esperado por ItemDTO en el backend
+                const itemPayload = {
+                    productoId: item.id,
+                    cantidad: item.quantity,
+                    precioUnitario: item.precio
+                };
+                // Llama a: POST /api/v1/carrito/agregar-item/{carritoId}/
+                return api.post(`/api/v1/carrito/agregar-item/${carritoId}/`, itemPayload);
+            });
+
+            await Promise.all(promesasDeItems);
+            console.log("Todos los items agregados al backend");
+
+            // --- PASO C: Generar la Boleta ---
+            // Llama a: POST /api/v1/boletas/generar/{carritoId}
+            // Esto finaliza la compra en el backend
+            const boletaResponse = await api.post(`/api/v1/boletas/generar/${carritoId}`);
+            const boletaGenerada = boletaResponse.data;
+
+            // --- PASO D: Finalización Exitosa ---
+            
+            // 1. Agregar al contexto local de pedidos (opcional, para que se vea inmediato sin recargar)
+            // Nota: Idealmente aquí usarías los datos reales de 'boletaGenerada'
             agregarPedido({
                 items: cart.items,
                 subtotal: cart.subtotal,
@@ -60,17 +94,32 @@ export const CartSummary = ({ cart, onApplyPromoCode, onRemovePromoCode }: CartS
                 codigoPromoAplicado: cart.promoCode?.code
             });
 
-            // Vaciar el carrito
+            // 2. Limpiar carrito local
             clearCart();
 
-            setIsProcessing(false);
+            // 3. Feedback al usuario
+            alert(`¡Compra exitosa! 🎉\n\nSe ha generado la boleta N° ${boletaGenerada.id}.\nTotal pagado: ${formatPrice(totalConDescuentos)}`);
 
-            // Mostrar mensaje de exito
-            alert("Compra realizada exitosamente \n\nPuedes ver tu pedido en tu perfil.");
-
-            // Redirigir a la página de cuenta
+            // 4. Redirigir
             navigate("/account");
-        }, 1500);
+
+        } catch (error: any) {
+            console.error("Error en el proceso de pago:", error);
+            
+            // Manejo básico de errores
+            let mensajeError = "Hubo un problema al procesar tu compra.";
+            if (error.response) {
+                // El servidor respondió con un código de error
+                mensajeError += ` (${error.response.data?.message || error.response.status})`;
+            } else if (error.request) {
+                // No hubo respuesta del servidor
+                mensajeError += " No se pudo conectar con el servidor.";
+            }
+            
+            alert(mensajeError);
+        } finally {
+            setIsProcessing(false);
+        }
     };
 
     return (
@@ -131,9 +180,17 @@ export const CartSummary = ({ cart, onApplyPromoCode, onRemovePromoCode }: CartS
             <button 
                 onClick={handleProcederPago}
                 disabled={isProcessing || cart.items.length === 0}
-                className="w-full bg-rose-500 text-white py-3 rounded-lg hover:bg-rose-600 transition-colors font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="w-full bg-rose-500 text-white py-3 rounded-lg hover:bg-rose-600 transition-colors font-medium disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center"
             >
-                {isProcessing ? 'Procesando...' : 'Proceder al pago'}
+                {isProcessing ? (
+                    <>
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Procesando...
+                    </>
+                ) : 'Proceder al pago'}
             </button>
             
             <p className="text-xs text-gray-500 text-center mt-3">

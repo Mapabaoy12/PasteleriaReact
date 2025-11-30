@@ -21,7 +21,7 @@ export const ProductForm = ({ producto, onSubmit, onCancel }: ProductFormProps) 
     useEffect(() => {
         if (producto) {
             setFormData({
-                titulo: producto.titulo,
+                titulo: producto.nombre,
                 descripcion: producto.descripcion,
                 precio: producto.precio,
                 imagen: producto.imagen,
